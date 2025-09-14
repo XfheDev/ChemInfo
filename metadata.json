@@ -1,0 +1,5 @@
+{
+  "name": "ChemInfo",
+  "description": "Türkçe olarak kimyasal bileşikler, moleküller ve kavramlar hakkında ayrıntılı bilgi sağlayan yapay zeka destekli bir kimya asistanı.",
+  "requestFramePermissions": []
+}
