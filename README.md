@@ -22,7 +22,7 @@ Katkıda Bulunma
 Projeye katkı sağlamak isterseniz Pull Request açabilir veya önerilerinizi Issues bölümünden paylaşabilirsiniz.
 
 
-Yerel olarak çalıştırma
+**Yerel olarak çalıştırma**
 
 **Gereksinimler**  Node.js
 1. Gerekli kütüphaneleri yükleme:
