@@ -21,11 +21,10 @@ Katkıda Bulunma
 
 Projeye katkı sağlamak isterseniz Pull Request açabilir veya önerilerinizi Issues bölümünden paylaşabilirsiniz.
 
-##Yerel olarak çalıştırma
+
+Yerel olarak çalıştırma
 
 **Gereksinimler**  Node.js
-
-
 1. Gerekli kütüphaneleri yükleme:
    `npm install`
 2. API key'inizi ayarlayın `GEMINI_API_KEY`  [.env.local](.env.local) 
