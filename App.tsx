@@ -93,7 +93,7 @@ const App: React.FC = () => {
         </div>
       </main>
       <footer className="w-full text-center py-4 text-gray-500 text-sm no-print">
-        Çınar Şerif AKIN
+        Çınar Şerif AKIN ve Yağız Eren ÖZTEKİN
       </footer>
     </div>
   );
