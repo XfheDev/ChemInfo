@@ -1,4 +1,14 @@
 import React from 'react';
+import DOMPurify from 'dompurify';
+
+function sanitizeHtml(html: string | null | undefined) {
+  return html
+    ? DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['span', 'p'],
+        ALLOWED_ATTR: ['class'],
+      })
+    : '';
+}
 
 interface FormattedContentProps {
   content: string;
@@ -14,7 +24,7 @@ const FormattedContent: React.FC<FormattedContentProps> = ({ content }) => {
   return (
     <div
       className="prose prose-invert max-w-none prose-p:text-gray-300 prose-p:my-2 prose-strong:text-white prose-ul:list-disc prose-ul:ml-5 prose-li:text-gray-300 prose-li:my-1"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
     />
   );
 };
