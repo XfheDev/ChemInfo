@@ -1,75 +1,73 @@
-// FIX: Removed unused 'Type' import from "@google/genai" to resolve potential type conflicts that were causing compilation errors.
+
 import { GoogleGenAI } from "@google/genai";
 import { GeminiResponse, ResponseType } from "../types";
 
+// Note: process.env.API_KEY is automatically provided by the environment
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const systemInstruction = `Sen dünya standartlarında bir kimya uzmanı asistansın. Görevin, kullanıcının sorgusunu analiz etmek ve yapılandırılmış bir JSON yanıtı sağlamaktır. Sorguya dayanarak, yanıt türünü belirlemeli ve çıktını buna göre yapılandırmalısın. En üst düzey JSON nesnesi bir 'type' ve bir 'data' özelliğine sahip olmalıdır.
+// The system instruction defines the expected behavior and response format for the model.
+// Fix: Triple backticks within the template literal must be escaped (\`\`\`) to prevent ending the string prematurely.
+const systemInstruction = `Sen uzman bir kimya asistanısın. Sorguları analiz et ve JSON yanıt dön.
 
-1.  **Eğer sorgu tek bir kimyasal bileşik hakkındaysa (örneğin, "Su", "H2O", "Aspirin"), 'type'ı "${ResponseType.CHEMICAL_INFO}" olarak ayarla.**
-    'data' nesnesi şunları içermelidir:
-    - 'name': string (Kimyasalın yaygın adı).
-    - 'formula': string (Kimyasal formülü).
-    - 'description': string (Kısa, ilgi çekici bir açıklama; <p>, <strong>, <ul>, <li> gibi basit HTML etiketleri kullanılabilir).
-    - 'properties': object (Önemli kimyasal/fiziksel özelliklerin bir anahtar-değer haritası. Örneğin: {"Molar Kütle": "18.015 g/mol"}).
-    - 'safety_information': object ('pictograms' dizisi ve bir 'summary' dizesi içerir. 'pictograms', {label: string, symbol: string} nesnelerinden oluşan bir dizidir. 'symbol' için şunlardan birini kullan: 'explosive', 'flammable', 'oxidizing', 'compressed_gas', 'corrosive', 'toxic', 'harmful', 'health_hazard', 'environmental_hazard').
-    - 'quiz': object|null ('title' ve bir 'questions' dizisi (her biri 'question', 'options', 'correct_answer', 'explanation' içerir) olan küçük bir sınav veya uygun değilse null).
+1. Bileşik Sorgusu: 'type' = "${ResponseType.CHEMICAL_INFO}". Data: name, formula, description (HTML formatında, önemli kelimeleri <strong> içine al), smiles (SMILES dizesi), pubchem_cid (sayı veya dize), properties (anahtar-değer çiftleri), safety_information (pictograms: {label: string, symbol: string} dizisi; summary: string), quiz (title: string, questions: {question: string, options: string[], correct_answer: string, explanation: string} dizisi).
+   Piktogram sembolleri şunlardan biri olmalı: explosive, flammable, oxidizing, compressed_gas, corrosive, toxic, harmful, health_hazard, environmental_hazard.
 
-2.  **Eğer sorgu bir karşılaştırma ise (örneğin, "alkanlar ve alkenleri karşılaştır", "etanol vs metanol"), 'type'ı "${ResponseType.COMPARISON}" olarak ayarla.**
-    'data' nesnesi şunları içermelidir:
-    - 'title': string (Karşılaştırma için bir başlık).
-    - 'compounds': array (Her biri karşılaştırma noktaları için 'name' ve 'features' nesnesi içeren bir nesne dizisi).
-    - 'summary': string (Basit HTML ile biçimlendirilmiş sonuç özeti).
+2. Karşılaştırma: 'type' = "${ResponseType.COMPARISON}". Data: title, compounds (name, features: nesne), summary.
 
-3.  **Eğer sorgu genel bir kimya sorusu ise (örneğin, "oksidasyon nedir?", "kovalent bağları açıkla"), 'type'ı "${ResponseType.GENERAL}" olarak ayarla.**
-    'data' nesnesi şunları içermelidir:
-    - 'title': string (Konu için bir başlık).
-    - 'summary': string (Cevabın kısa bir özeti, basit HTML ile biçimlendirilmiş).
-    - 'sections': array (Her biri ayrıntılı açıklama için 'subtitle' ve 'content' içeren bir nesne dizisi, basit HTML ile biçimlendirilmiş).
+3. Genel Soru: 'type' = "${ResponseType.GENERAL}". Data: title, summary, sections (subtitle, content).
 
-4.  **Eğer sorgu belirsiz, anlamsız veya kimya alanı dışındaysa, 'type'ı "${ResponseType.UNKNOWN}" olarak ayarla.**
-    'data' nesnesi, kullanıcı dostu bir açıklama içeren bir 'error' alanı içermelidir.
+4. Kavram Haritası: 'type' = "${ResponseType.CONCEPT_MAP}". Data: centralConcept, relatedConcepts (topic, relationship).
 
-- **ÇOK ÖNEMLİ: Tüm yanıtın tek ve geçerli bir JSON nesnesi olmalıdır ve başka hiçbir şey içermemelidir.** Yanıtı markdown \`\`\`json \`\`\` gibi işaretçiler veya başka bir metinle sarma.
-- **TÜM METİN İÇERİKLERİ (açıklamalar, özellik adları, sınav soruları vb.) KESİNLİKLE TÜRKÇE OLMALIDIR.**
-`;
+5. Diğer: 'type' = "${ResponseType.UNKNOWN}", data.error = kullanıcıya yönelik hata mesajı.
 
+Önemli Kurallar:
+- Tüm metinler Türkçe olmalı.
+- Yanıt SADECE saf JSON dizesi olmalı, markdown bloğu (\`\`\`json) içermemeli.
+- Bileşik sorgularında mutlaka SMILES ve varsa PubChem CID ekle.
+- Kimyasal formülleri (örn: H2O) açıklamalarda düzgün göster.`;
+
+// Fetches and parses chemistry data from the Gemini API.
 export const getAnalysisForQuery = async (query: string): Promise<GeminiResponse> => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: `Aşağıdaki kimya sorgusunu analiz et ve bir JSON yanıtı oluştur: "${query}"`,
+      model: "gemini-3-flash-preview", // Flash model is chosen for speed and cost-effectiveness in JSON tasks.
+      contents: [{ parts: [{ text: query }] }],
       config: {
         systemInstruction,
         responseMimeType: "application/json",
+        temperature: 0.7,
       },
     });
 
-    // FIX: The error "response.text is not a function" confirms that `response.text` is a property, not a method.
-    // The code is corrected to access the response text as a property.
     const jsonText = response.text;
-    
     if (!jsonText) {
-        throw new Error("API boş bir yanıt döndürdü.");
+      throw new Error("Modelden boş yanıt döndü.");
     }
 
-    const parsedResponse = JSON.parse(jsonText.trim());
-
-    if (!parsedResponse.type || !parsedResponse.data) {
-        throw new Error("API'den geçersiz JSON yapısı alındı.");
+    try {
+      // Clean possible markdown artifacts if any, though responseMimeType should handle it.
+      const cleanedJson = jsonText.trim().replace(/^```json/, '').replace(/```$/, '');
+      return JSON.parse(cleanedJson) as GeminiResponse;
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError, "Raw Text:", jsonText);
+      return {
+        type: ResponseType.UNKNOWN,
+        data: { error: "Yapay zeka yanıtı anlaşılamadı. Lütfen tekrar deneyin." },
+      };
     }
 
-    return parsedResponse as GeminiResponse;
-
-  } catch (error) {
-    console.error("Gemini yanıtı alınırken veya işlenirken hata oluştu:", error);
-    let errorMessage = "AI ile iletişim kurulurken bir hata oluştu. Yanıt hatalı biçimlendirilmiş olabilir.";
-    if (error instanceof Error) {
-        errorMessage = error.message;
+  } catch (error: any) {
+    console.error("Gemini API Error:", error);
+    
+    // Handle specific Rpc/XHR errors gracefully to improve user experience.
+    let errorMessage = "Yapay zeka şu an meşgul veya bir bağlantı hatası oluştu.";
+    if (error.message?.includes("500") || error.message?.includes("Rpc failed")) {
+      errorMessage = "Sunucu tarafında bir hata oluştu (RPC 500). Lütfen kısa süre sonra tekrar deneyin.";
     }
+
     return {
       type: ResponseType.UNKNOWN,
-      data: { error: `API Hatası: ${errorMessage}` },
+      data: { error: errorMessage },
     };
   }
 };

@@ -3,18 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChemInfo</title>
+    <title>ChemInfo Pro - Geleceğin Kimya Asistanı</title>
     
-    <!-- Tailwind CSS -->
+    <style>
+        :root {
+            --color-primary-400: 34 211 238;
+            --color-primary-500: 6 182 212;
+            --color-primary-600: 8 145 178;
+            --color-surface-900: 8 12 20;
+            --color-surface-800: 15 23 42;
+            --color-text-main: 248 250 252;
+            --color-text-muted: 148 163 184;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: rgb(var(--color-surface-900));
+            color: rgb(var(--color-text-main));
+            margin: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(var(--color-primary-500), 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(var(--color-primary-600), 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Cam Paneller için Ultra Derinlik */
+        .glass-panel {
+            background: rgba(var(--color-surface-800), 0.45);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 30px 60px -12px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Akıcı Parçacık Efekti (Pseudo) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='white' fill-opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .printable-content { box-shadow: none !important; border: 1px solid #eee !important; background: white !important; }
+            .prose { color: black !important; }
+        }
+    </style>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.1/3Dmol-min.js"></script>
     
-    <!-- Google Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 400: 'rgb(var(--color-primary-400))', 500: 'rgb(var(--color-primary-500))', 600: 'rgb(var(--color-primary-600))' },
+                        surface: { 900: 'rgb(var(--color-surface-900))', 800: 'rgb(var(--color-surface-800))' },
+                    },
+                    borderRadius: { '4xl': '2rem', '5xl': '3rem' }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <!-- Import Map -->
     <script type="importmap">
     {
       "imports": {
@@ -25,56 +96,8 @@
       }
     }
     </script>
-    
-    <style>
-        /* Base styles to match the component styles */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom animations used in components */
-        .animate-fade-in-up {
-            animation: fade-in-up 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes fade-in-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Print-specific styles */
-        @media print {
-            body {
-                background-color: white !important;
-                color: black !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .printable-content {
-                box-shadow: none !important;
-                border: 1px solid #ccc;
-                padding: 1rem;
-            }
-            h1, h2, h3, p, li, span {
-                color: black !important;
-            }
-            .bg-gray-900\/40 {
-                background-color: #f9f9f9 !important;
-            }
-            .ring-white\/10 {
-                ring-color: #ddd !important;
-            }
-        }
-    </style>
 </head>
-<body class="bg-gray-900">
-    <noscript>Bu uygulamayı çalıştırmak için JavaScript'i etkinleştirmeniz gerekir.</noscript>
+<body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>

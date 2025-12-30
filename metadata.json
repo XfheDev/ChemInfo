@@ -1,5 +1,7 @@
 {
-  "name": "ChemInfo",
-  "description": "Türkçe olarak kimyasal bileşikler, moleküller ve kavramlar hakkında ayrıntılı bilgi sağlayan yapay zeka destekli bir kimya asistanı.",
-  "requestFramePermissions": []
+  "name": "ChemInfo Pro",
+  "description": "Yapay zeka ve 3D görselleştirme destekli, sesli komut özellikli profesyonel kimya asistanı.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

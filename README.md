@@ -1,32 +1,20 @@
-ChemInfo 🔬⚗️
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-ChemInfo, kimya ile ilgilenen öğrenciler, araştırmacılar ve meraklılar için geliştirilmiş bir kimya asistanı projesidir.
-Bu proje, temel kimyasal bilgileri hızlıca öğrenmeyi, moleküller hakkında bilgi edinmeyi ve çeşitli kimya hesaplamalarını kolaylaştırmayı amaçlar.
+# Run and deploy your AI Studio app
 
-Özellikler
+This contains everything you need to run your app locally.
 
-🧪 Molekül Bilgileri: Kimyasal formüller, isimlendirme ve yapılar hakkında bilgi.
+View your app in AI Studio: https://ai.studio/apps/drive/1cVDwZrhzHeqyRoIKKQxV94y4CpJGBgX8
 
-⚛️ Temel Hesaplamalar: Mol, kütle, derişim ve benzeri hesaplamaları kolayca yapma.
+## Run Locally
 
-📚 Eğitici İçerik: Kimya konularını öğrenmeye yardımcı kısa açıklamalar ve örnekler.
-
-🔍 Hızlı Sorgulama: Basit bir arayüz ile kimyasal verileri hızlıca arama.
-
-Hedef
-
-ChemInfo, kimyayı daha erişilebilir hale getirmeyi ve kullanıcıların hem derslerde hem de araştırmalarda işlerini kolaylaştırmayı hedefler.
-
-Katkıda Bulunma
-
-Projeye katkı sağlamak isterseniz Pull Request açabilir veya önerilerinizi Issues bölümünden paylaşabilirsiniz.
+**Prerequisites:**  Node.js
 
 
-**Yerel olarak çalıştırma**
-
-**Gereksinimler**  Node.js
-1. Gerekli kütüphaneleri yükleme:
+1. Install dependencies:
    `npm install`
-2. API key'inizi ayarlayın `GEMINI_API_KEY`  [.env.local](.env.local) 
-3. Uygulamayı çalıştırın:
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
    `npm run dev`

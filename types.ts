@@ -1,10 +1,10 @@
-// FIX: Define all necessary types for the application.
 export type HistoryItem = string;
 
 export enum ResponseType {
   CHEMICAL_INFO = "chemical_info",
   COMPARISON = "comparison",
   GENERAL = "general_answer",
+  CONCEPT_MAP = "concept_map",
   UNKNOWN = "unknown",
 }
 
@@ -19,6 +19,8 @@ export interface ChemicalInfo {
   name: string;
   formula: string;
   description: string;
+  smiles?: string;
+  pubchem_cid?: string | number;
   properties: Record<string, string>;
   safety_information: {
     pictograms: {
@@ -36,7 +38,7 @@ export interface ChemicalInfo {
 export interface ComparisonInfo {
   title: string;
   compounds: {
-    name: string;
+    name:string;
     features: Record<string, string>;
   }[];
   summary: string;
@@ -51,7 +53,15 @@ export interface GeneralAnswer {
   }[];
 }
 
-export type GeminiResponseData = ChemicalInfo | ComparisonInfo | GeneralAnswer | { error: string };
+export interface ConceptMapInfo {
+    centralConcept: string;
+    relatedConcepts: {
+        topic: string;
+        relationship: string;
+    }[];
+}
+
+export type GeminiResponseData = ChemicalInfo | ComparisonInfo | GeneralAnswer | ConceptMapInfo | { error: string };
 
 export interface GeminiResponse {
   type: ResponseType;

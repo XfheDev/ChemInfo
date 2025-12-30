@@ -14,13 +14,13 @@ const History: React.FC<HistoryProps> = ({ history, onHistoryClick, onClearHisto
     }
 
     return (
-        <div className="w-full max-w-2xl mx-auto mb-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <div className="w-full max-w-2xl mx-auto mb-8 animate-fade-in-up no-print" style={{ animationDelay: '300ms' }}>
             <div className="flex justify-between items-center mb-3 px-2">
-                <h3 className="text-sm font-semibold text-gray-400">Son Aramalar</h3>
+                <h3 className="text-sm font-semibold text-text-muted">Son Aramalar</h3>
                 <button 
                     onClick={onClearHistory}
                     disabled={isLoading}
-                    className="ml-auto text-xs text-gray-500 hover:text-cyan-400 transition-colors disabled:opacity-50 flex items-center gap-1"
+                    className="ml-auto text-xs text-text-muted hover:text-primary-400 transition-colors disabled:opacity-50 flex items-center gap-1"
                 >
                     <span className="material-symbols-outlined text-sm">delete</span>
                     Temizle
@@ -32,7 +32,7 @@ const History: React.FC<HistoryProps> = ({ history, onHistoryClick, onClearHisto
                         key={index}
                         onClick={() => onHistoryClick(item)}
                         disabled={isLoading}
-                        className="px-4 py-1.5 bg-gray-700/50 text-gray-300 rounded-full text-sm hover:bg-gray-600/70 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-1.5 bg-surface-700/50 text-text-main rounded-full text-sm hover:bg-surface-600/70 hover:text-text-main transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {item}
                     </button>

@@ -1,8 +1,9 @@
 import React from 'react';
-import { GeminiResponse, ResponseType, ChemicalInfo, ComparisonInfo, GeneralAnswer } from '../types';
+import { GeminiResponse, ResponseType, ChemicalInfo, ComparisonInfo, GeneralAnswer, ConceptMapInfo } from '../types';
 import ChemicalInfoDisplay from './ChemicalInfoDisplay';
 import ComparisonDisplay from './ComparisonDisplay';
 import GeneralAnswerDisplay from './GeneralAnswerDisplay';
+import ConceptMapDisplay from './ConceptMapDisplay';
 import ErrorMessage from './ErrorMessage';
 
 interface ResponseDisplayProps {
@@ -18,6 +19,8 @@ const ResponseDisplay: React.FC<ResponseDisplayProps> = ({ response }) => {
       return <ComparisonDisplay data={response.data as ComparisonInfo} />;
     case ResponseType.GENERAL:
       return <GeneralAnswerDisplay data={response.data as GeneralAnswer} />;
+    case ResponseType.CONCEPT_MAP:
+      return <ConceptMapDisplay data={response.data as ConceptMapInfo} />;
     case ResponseType.UNKNOWN:
         const errorData = response.data as { error: string };
         return <ErrorMessage message={errorData.error || "Bilinmeyen bir yanıt türü alındı."} />
